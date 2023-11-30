@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Cocok.In</string>
+    <string name="login_button">Sign-in</string>
+    <string name="login_label">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
 </resources>

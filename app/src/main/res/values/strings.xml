@@ -2,6 +2,9 @@
     <string name="app_name">Cocok.In</string>
     <string name="login_button">Sign-in</string>
     <string name="login_label">Login</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
+    <string name="email">Email:</string>
+    <string name="password">Password:</string>
+    <string name="register_lable">Register</string>
+    <string name="name_lable">Name:</string>
+    <string name="register_button">Sign-Up</string>
 </resources>

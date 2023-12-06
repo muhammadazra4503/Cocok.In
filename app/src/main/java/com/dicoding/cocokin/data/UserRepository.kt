@@ -3,8 +3,9 @@ package com.dicoding.cocokin.data
 import com.dicoding.cocokin.data.pref.UserLoginRequest
 import com.dicoding.cocokin.data.pref.UserModel
 import com.dicoding.cocokin.data.pref.UserPreference
+import com.dicoding.cocokin.data.pref.UserRegisterRequest
 import com.dicoding.cocokin.data.remote.response.LoginResponse
-import com.dicoding.cocokin.data.remote.retrofit.ApiConfig
+import com.dicoding.cocokin.data.remote.response.RegisterResponse
 import com.dicoding.cocokin.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
 
@@ -29,6 +30,11 @@ class UserRepository private constructor(private val userPreference: UserPrefere
             saveSession(UserModel(email, response.idToken, true))
         }
         return response
+    }
+
+    suspend fun register(email: String, password: String): RegisterResponse {
+        val registerRequest = UserRegisterRequest(email, password)
+        return apiService.register(registerRequest)
     }
 
     companion object {

@@ -31,12 +31,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
         setupView()
-        logoutAction()
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    // Handle the Home item click
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, HomeFragment())
+                        .commit()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_notifications -> {
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        bottomNavigationView.selectedItemId = R.id.navigation_home
     }
 
     private fun setupView() {
@@ -65,14 +67,6 @@ class MainActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
-        }
-    }
-
-    private fun logoutAction(){
-        binding.logoutButton.setOnClickListener{
-            viewModel.logout()
-            startActivity(Intent(this, WelcomeActivity::class.java))
-            finish()
         }
     }
 }

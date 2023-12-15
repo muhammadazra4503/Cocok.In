@@ -12,7 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.dicoding.cocokin.data.LoginResult
 import com.dicoding.cocokin.databinding.ActivityRegisterBinding
-import com.dicoding.cocokin.ui.MainActivity
+import com.dicoding.cocokin.ui.main.MainActivity
 import com.dicoding.cocokin.ui.viewmodel.RegisterViewModel
 import com.dicoding.cocokin.ui.viewmodel.ViewModelFactory
 

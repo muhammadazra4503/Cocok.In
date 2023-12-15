@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -13,7 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.dicoding.cocokin.data.LoginResult
 import com.dicoding.cocokin.databinding.ActivityLoginBinding
-import com.dicoding.cocokin.ui.MainActivity
+import com.dicoding.cocokin.ui.main.MainActivity
 import com.dicoding.cocokin.ui.viewmodel.LoginViewModel
 import com.dicoding.cocokin.ui.viewmodel.ViewModelFactory
 

@@ -27,7 +27,7 @@ class UserRepository private constructor(private val userPreference: UserPrefere
         val response = apiService.login(loginRequest)
 
         if (response.registered) {
-            saveSession(UserModel(email, response.idToken, true))
+            saveSession(UserModel(email, response.localId, true))
         }
         return response
     }

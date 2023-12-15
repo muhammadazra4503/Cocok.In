@@ -1,4 +1,4 @@
-package com.dicoding.cocokin.ui
+package com.dicoding.cocokin.ui.main
 
 import android.content.Intent
 import android.os.Build
@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
+import com.dicoding.cocokin.R
 import com.dicoding.cocokin.databinding.ActivityMainBinding
 import com.dicoding.cocokin.ui.viewmodel.MainViewModel
 import com.dicoding.cocokin.ui.viewmodel.ViewModelFactory
 import com.dicoding.cocokin.ui.welcome.WelcomeActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel> {
@@ -30,6 +32,28 @@ class MainActivity : AppCompatActivity() {
         }
         setupView()
         logoutAction()
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    // Handle the Home item click
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.navigation_notifications -> {
+                    // Handle the Dashboard item click
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.navigation_favorite -> {
+                    // Handle the Notifications item click
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.navigation_profile -> {
+                    // Handle the Notifications item click
+                    return@setOnNavigationItemSelectedListener true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun setupView() {

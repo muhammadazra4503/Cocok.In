@@ -29,13 +29,14 @@ class RegisterActivity : AppCompatActivity() {
         setupView()
 
         binding.registerButton.setOnClickListener {
+            val name = binding.nameEditText.text.toString()
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
             if (email.isEmpty() || password.isEmpty()) {
                 showToast("Please enter both email and password.")
             } else {
                 showLoading(true)
-                viewModel.register(email, password)
+                viewModel.register(name, email, password)
             }
         }
 

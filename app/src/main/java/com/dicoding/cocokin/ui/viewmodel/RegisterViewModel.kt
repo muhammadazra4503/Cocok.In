@@ -21,10 +21,10 @@ class RegisterViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    fun register(email: String, password: String) {
+    fun register(name: String,email: String, password: String) {
         viewModelScope.launch {
             try {
-                val registerResponse: RegisterResponse = repository.register(email, password)
+                val registerResponse: RegisterResponse = repository.register(name, email, password)
 
                 // Sesuaikan dengan properti yang sesuai dalam RegisterResponse
                 if (registerResponse.idToken.isNotBlank()) {

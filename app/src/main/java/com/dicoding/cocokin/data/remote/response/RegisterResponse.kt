@@ -10,6 +10,9 @@ data class RegisterResponse(
 	@field:SerializedName("kind")
 	val kind: String,
 
+	@field:SerializedName("displayName")
+	val displayName: String,
+
 	@field:SerializedName("idToken")
 	val idToken: String,
 

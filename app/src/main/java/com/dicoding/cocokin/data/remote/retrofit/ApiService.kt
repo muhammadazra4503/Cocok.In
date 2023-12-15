@@ -9,12 +9,12 @@ import retrofit2.http.POST
 
 
 interface ApiService {
-    @POST("v1/accounts:signInWithPassword?key=AIzaSyCqhBWxEJUpiNK7ZimOCaqFjttVQt5LhZQ")
+    @POST("v1/accounts:signInWithPassword?key=AIzaSyCraSu3TwUfF0VAgVPiVXUZOJsPgxP33A8")
     suspend fun login(
         @Body request: UserLoginRequest
     ): LoginResponse
 
-    @POST("v1/accounts:signUp?key=AIzaSyCqhBWxEJUpiNK7ZimOCaqFjttVQt5LhZQ")
+    @POST("v1/accounts:signUp?key=AIzaSyCraSu3TwUfF0VAgVPiVXUZOJsPgxP33A8")
     suspend fun register(
         @Body request: UserRegisterRequest
     ): RegisterResponse

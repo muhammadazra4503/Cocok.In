@@ -32,8 +32,8 @@ class UserRepository private constructor(private val userPreference: UserPrefere
         return response
     }
 
-    suspend fun register(email: String, password: String): RegisterResponse {
-        val registerRequest = UserRegisterRequest(email, password)
+    suspend fun register(name: String, email: String, password: String): RegisterResponse {
+        val registerRequest = UserRegisterRequest(name, email, password)
         return apiService.register(registerRequest)
     }
 

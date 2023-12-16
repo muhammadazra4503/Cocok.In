@@ -6,14 +6,14 @@
         android:icon="@drawable/ic_home" />
 
     <item
-        android:id="@+id/navigation_notifications"
-        android:title="Notifications"
-        android:icon="@drawable/ic_notifications" />
+        android:id="@+id/navigation_cart"
+        android:title="Cart"
+        android:icon="@drawable/ic_cart" />
 
     <item
-        android:id="@+id/navigation_favorite"
-        android:title="Favorite"
-        android:icon="@drawable/ic_favorite" />
+        android:id="@+id/navigation_predict"
+        android:title="Predict"
+        android:icon="@drawable/ic_predict" />
 
     <item
         android:id="@+id/navigation_profile"

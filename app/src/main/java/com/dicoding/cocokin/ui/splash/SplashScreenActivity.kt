@@ -8,7 +8,7 @@ import com.dicoding.cocokin.R
 import com.dicoding.cocokin.ui.welcome.WelcomeActivity
 
 class SplashScreenActivity : AppCompatActivity() {
-    private val SPLASH_TIME_OUT: Long = 3000 //3detik
+    private val SPLASH_TIME_OUT: Long = 3000 // 3detik
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

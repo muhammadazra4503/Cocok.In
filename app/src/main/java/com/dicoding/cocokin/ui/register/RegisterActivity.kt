@@ -1,6 +1,5 @@
 package com.dicoding.cocokin.ui.register
 
-import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,9 +9,8 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import com.dicoding.cocokin.data.LoginResult
+import com.dicoding.cocokin.data.Result
 import com.dicoding.cocokin.databinding.ActivityRegisterBinding
-import com.dicoding.cocokin.ui.main.MainActivity
 import com.dicoding.cocokin.ui.viewmodel.RegisterViewModel
 import com.dicoding.cocokin.ui.viewmodel.ViewModelFactory
 
@@ -44,14 +42,14 @@ class RegisterActivity : AppCompatActivity() {
             // Hide loading bar
             showLoading(false)
             when (result) {
-                is LoginResult.Success -> {
+                is Result.Success -> {
                     showRegisterAlertDialog(
                         "Success",
                         "Registration has been successful!",
                         true
                     )
                 }
-                is LoginResult.Error -> {
+                is Result.Error -> {
                     showRegisterAlertDialog(
                         "Failed",
                         "Registration failed!",
@@ -82,9 +80,6 @@ class RegisterActivity : AppCompatActivity() {
             setMessage(message)
             if (isSuccess) {
                 setPositiveButton("Continue") { _, _ ->
-                    val intent = Intent(context, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
                     finish()
                 }
             } else {

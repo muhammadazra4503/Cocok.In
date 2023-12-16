@@ -10,7 +10,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import com.dicoding.cocokin.data.LoginResult
+import com.dicoding.cocokin.data.Result
 import com.dicoding.cocokin.databinding.ActivityLoginBinding
 import com.dicoding.cocokin.ui.main.MainActivity
 import com.dicoding.cocokin.ui.viewmodel.LoginViewModel
@@ -44,14 +44,14 @@ class LoginActivity : AppCompatActivity() {
             // Hide loading bar
             showLoading(false)
             when (result) {
-                is LoginResult.Success -> {
+                is Result.Success -> {
                     showLoginAlertDialog(
                         "Success",
                         "Login telah berhasil!",
                         true
                     )
                 }
-                is LoginResult.Error -> {
+                is Result.Error -> {
                     showLoginAlertDialog(
                         "Failed",
                         "Login gagal!",

@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dicoding.cocokin.data.LoginResult
+import com.dicoding.cocokin.data.Result
 import com.dicoding.cocokin.data.UserRepository
 import com.dicoding.cocokin.data.pref.UserModel
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: UserRepository):ViewModel() {
-    private val _loginResult = MutableLiveData<LoginResult>()
-    val loginResult: LiveData<LoginResult>
+    private val _loginResult = MutableLiveData<Result>()
+    val loginResult: LiveData<Result>
         get() = _loginResult
 
     fun saveSession(user:UserModel){
@@ -25,12 +25,12 @@ class LoginViewModel(private val repository: UserRepository):ViewModel() {
             try {
                 val loginResponse = repository.login(email, password)
                 if (loginResponse.registered) {
-                    _loginResult.value = LoginResult.Success
+                    _loginResult.value = Result.Success
                 } else {
-                    _loginResult.value = LoginResult.Error("Login failed")
+                    _loginResult.value = Result.Error("Login failed")
                 }
             } catch (e: Exception) {
-                _loginResult.value = LoginResult.Error("An error occurred: ${e.message}")
+                _loginResult.value = Result.Error("An error occurred: ${e.message}")
             }
         }
     }

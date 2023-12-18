@@ -5,11 +5,16 @@ import com.dicoding.cocokin.data.pref.UserModel
 import com.dicoding.cocokin.data.pref.UserPreference
 import com.dicoding.cocokin.data.pref.UserRegisterRequest
 import com.dicoding.cocokin.data.remote.response.LoginResponse
+import com.dicoding.cocokin.data.remote.response.ProductResponse
+import com.dicoding.cocokin.data.remote.response.ProductResponseItem
 import com.dicoding.cocokin.data.remote.response.RegisterResponse
 import com.dicoding.cocokin.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
 
-class UserRepository private constructor(private val userPreference: UserPreference, private val apiService: ApiService) {
+class UserRepository private constructor
+    (private val userPreference: UserPreference,
+     private val authApiService: ApiService,
+     private val productApiService: ApiService) {
     suspend fun saveSession(user: UserModel) {
         userPreference.saveSession(user)
     }
@@ -24,7 +29,7 @@ class UserRepository private constructor(private val userPreference: UserPrefere
 
     suspend fun login(email: String, password: String): LoginResponse {
         val loginRequest = UserLoginRequest(email, password, true)
-        val response = apiService.login(loginRequest)
+        val response = authApiService.login(loginRequest)
 
         if (response.registered) {
             saveSession(UserModel(email, response.localId, true))
@@ -32,20 +37,28 @@ class UserRepository private constructor(private val userPreference: UserPrefere
         return response
     }
 
+    suspend fun getProductData(): List<ProductResponseItem> {
+        return productApiService.getProductData()
+    }
+
+
+
     suspend fun register(name: String, email: String, password: String): RegisterResponse {
         val registerRequest = UserRegisterRequest(name, email, password)
-        return apiService.register(registerRequest)
+        return authApiService.register(registerRequest)
     }
 
     companion object {
         @Volatile
         private var instance: UserRepository? = null
+
         fun getInstance(
-            apiService: ApiService,
-            userPreference: UserPreference,
+            authApiService: ApiService,
+            productApiService: ApiService,
+            userPreference: UserPreference
         ): UserRepository =
             instance ?: synchronized(this) {
-                instance ?: UserRepository(userPreference, apiService)
+                instance ?: UserRepository(userPreference, authApiService, productApiService)
             }.also { instance = it }
     }
 }

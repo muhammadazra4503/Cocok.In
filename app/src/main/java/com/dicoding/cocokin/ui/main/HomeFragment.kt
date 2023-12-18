@@ -38,15 +38,24 @@ class HomeFragment : Fragment() {
                     false
                 }
         }
+
+        viewModel.productList.observe(viewLifecycleOwner) { productList ->
+            // Update the adapter with the new product list
+            adapter.submitList(productList)
+        }
+
+        viewModel.errorState.observe(viewLifecycleOwner) { errorMessage ->
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+        }
+
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getData().observe(viewLifecycleOwner){
-            adapter.updateData(it)
-        }
+        // Fetch product data when the fragment is created
+        viewModel.fetchProductData()
     }
 
     private fun setupRecyclerView() {

@@ -1,47 +1,58 @@
 package com.dicoding.cocokin.ui.adapter
 
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.dicoding.cocokin.R
-import com.dicoding.cocokin.data.dummy.ProductDummy
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.dicoding.cocokin.data.remote.response.ProductResponseItem
 import com.dicoding.cocokin.databinding.ItemHomeBinding
 
-class HomeAdapter(): RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
-    private val data = mutableListOf<ProductDummy>()
+class HomeAdapter : ListAdapter<ProductResponseItem, HomeAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
-    fun updateData(newData : List<ProductDummy>){
-        data.clear()
-        data.addAll(newData)
-        notifyDataSetChanged()
+    class MyViewHolder(private val binding: ItemHomeBinding) : RecyclerView.ViewHolder(binding.root) {
+        val ivProduct = binding.ivProduct
+        val tvProduct = binding.tvProduct
+        val tvPrice = binding.tvPrice
     }
 
-    class ViewHolder(
-        private val binding: ItemHomeBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(produk: ProductDummy) = with(binding) {
-            ivProduct.setImageResource(produk.imageId)
-            tvProduct.text = produk.namaProduk
-            root.setOnClickListener {
-                val message = root.context.getString(R.string.message, produk.namaProduk)
-                Toast.makeText(root.context, message, Toast.LENGTH_LONG).show()
-            }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val binding = ItemHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MyViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val product = getItem(position)
+
+        // Set product data to views
+        holder.tvProduct.text = product.nama
+        holder.tvPrice.text = "${product.harga}"
+
+        // Load image using Glide or any other image loading library
+        Glide.with(holder.itemView.context)
+            .load(product.gambar)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(holder.ivProduct)
+
+        // Set click listener if needed
+        holder.itemView.setOnClickListener {
+            // Handle item click
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemHomeBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding)
-    }
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ProductResponseItem>() {
+            override fun areItemsTheSame(oldItem: ProductResponseItem, newItem: ProductResponseItem): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(data[position])
+            override fun areContentsTheSame(oldItem: ProductResponseItem, newItem: ProductResponseItem): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }
+

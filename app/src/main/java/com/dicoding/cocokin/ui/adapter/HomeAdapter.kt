@@ -1,5 +1,6 @@
 package com.dicoding.cocokin.ui.adapter
 
+import android.content.Intent
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import android.view.LayoutInflater
@@ -7,8 +8,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.dicoding.cocokin.R
 import com.dicoding.cocokin.data.remote.response.ProductResponseItem
 import com.dicoding.cocokin.databinding.ItemHomeBinding
+import com.dicoding.cocokin.ui.detail.DetailActivity
 
 
 class HomeAdapter : ListAdapter<ProductResponseItem, HomeAdapter.MyViewHolder>(DIFF_CALLBACK) {
@@ -29,7 +32,7 @@ class HomeAdapter : ListAdapter<ProductResponseItem, HomeAdapter.MyViewHolder>(D
 
         // Set product data to views
         holder.tvProduct.text = product.nama
-        holder.tvPrice.text = "${product.harga}"
+        holder.tvPrice.text = String.format(holder.itemView.context.getString(R.string.harga), product.harga)
 
         // Load image using Glide or any other image loading library
         Glide.with(holder.itemView.context)
@@ -40,6 +43,9 @@ class HomeAdapter : ListAdapter<ProductResponseItem, HomeAdapter.MyViewHolder>(D
         // Set click listener if needed
         holder.itemView.setOnClickListener {
             // Handle item click
+            val intent = Intent(holder.itemView.context, DetailActivity::class.java)
+            intent.putExtra("PRODUCT_ID", product.id)
+            holder.itemView.context.startActivity(intent)
         }
     }
 

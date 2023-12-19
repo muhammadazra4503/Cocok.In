@@ -42,12 +42,12 @@ class MainActivity : AppCompatActivity() {
                         .commit()
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.navigation_cart -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, CartFragment())
-                        .commit()
-                    return@setOnNavigationItemSelectedListener true
-                }
+//                R.id.navigation_cart -> {
+//                    supportFragmentManager.beginTransaction()
+//                        .replace(R.id.fragmentContainer, CartFragment())
+//                        .commit()
+//                    return@setOnNavigationItemSelectedListener true
+//                }
                 R.id.navigation_predict -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainer, PredictFragment())

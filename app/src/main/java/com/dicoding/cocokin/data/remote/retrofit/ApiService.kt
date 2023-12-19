@@ -1,10 +1,11 @@
 package com.dicoding.cocokin.data.remote.retrofit
 
+import com.dicoding.cocokin.data.pref.AddToCartRequest
 import com.dicoding.cocokin.data.pref.UserLoginRequest
 import com.dicoding.cocokin.data.pref.UserRegisterRequest
+import com.dicoding.cocokin.data.remote.response.AddCartResponse
 import com.dicoding.cocokin.data.remote.response.DetailProductResponseItem
 import com.dicoding.cocokin.data.remote.response.LoginResponse
-import com.dicoding.cocokin.data.remote.response.ProductResponse
 import com.dicoding.cocokin.data.remote.response.ProductResponseItem
 import com.dicoding.cocokin.data.remote.response.RegisterResponse
 import retrofit2.http.Body
@@ -30,4 +31,7 @@ interface ApiService {
     suspend fun getProductDetail(
         @Path("id") id: Int
     ): List<DetailProductResponseItem>
+
+    @POST("api/masukkeranjang")
+    suspend fun addToCart(@Body request: AddToCartRequest): AddCartResponse
 }

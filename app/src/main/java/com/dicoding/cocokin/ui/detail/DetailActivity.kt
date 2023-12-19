@@ -50,5 +50,6 @@ class DetailActivity : AppCompatActivity() {
             Toast.makeText(this, errorMessage ?: "An unexpected error occurred", Toast.LENGTH_SHORT)
                 .show()
         }
+
     }
 }

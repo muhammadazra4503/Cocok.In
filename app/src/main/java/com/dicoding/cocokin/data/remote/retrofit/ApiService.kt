@@ -1,11 +1,13 @@
 package com.dicoding.cocokin.data.remote.retrofit
 
 import com.dicoding.cocokin.data.pref.AddToCartRequest
+import com.dicoding.cocokin.data.pref.ForgotPasswordRequest
 import com.dicoding.cocokin.data.pref.UserLoginRequest
 import com.dicoding.cocokin.data.pref.UserRegisterRequest
 import com.dicoding.cocokin.data.remote.response.AddCartResponse
 import com.dicoding.cocokin.data.remote.response.CartResponseItem
 import com.dicoding.cocokin.data.remote.response.DetailProductResponseItem
+import com.dicoding.cocokin.data.remote.response.ForgotPasswordResponse
 import com.dicoding.cocokin.data.remote.response.LoginResponse
 import com.dicoding.cocokin.data.remote.response.ProductResponseItem
 import com.dicoding.cocokin.data.remote.response.RegisterResponse
@@ -39,5 +41,8 @@ interface ApiService {
 
     @GET("api/keranjang/{sessionid}")
     suspend fun getCart(@Path("sessionid") sessionId: String): List<CartResponseItem>
+
+    @POST("v1/accounts:sendOobCode?key=AIzaSyCraSu3TwUfF0VAgVPiVXUZOJsPgxP33A8")
+    suspend fun sendOobCode(@Body request: ForgotPasswordRequest): ForgotPasswordResponse
 
 }

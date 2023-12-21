@@ -1,5 +1,6 @@
 package com.dicoding.cocokin.ui.detail
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dicoding.cocokin.R
 import com.dicoding.cocokin.databinding.ActivityDetailBinding
+import com.dicoding.cocokin.ui.checkout.CheckoutActivity
 import com.dicoding.cocokin.ui.viewmodel.DetailViewModel
 import com.dicoding.cocokin.ui.viewmodel.ViewModelFactory
 
@@ -41,6 +43,12 @@ class DetailActivity : AppCompatActivity() {
                     .load(productDetail.gambar)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(binding.ivProduct)
+
+                binding.buttonBuyNow.setOnClickListener {
+                    val intent = Intent(this, CheckoutActivity::class.java)
+                    // Tambahan data lain yang mungkin perlu Anda kirim ke CheckoutActivity
+                    startActivity(intent)
+                }
 
                 binding.buttonCart.setOnClickListener {
                     // Call addToCart method when the button is clicked

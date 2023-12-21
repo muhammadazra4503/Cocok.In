@@ -15,4 +15,10 @@
     <string name="harga">Rp. %1$d</string>
     <string name="button_gallery">Gallery</string>
     <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu.</string>
+    <string name="forgot_label">Reset Password</string>
+    <string name="tv_forgot">Forgot Password?</string>
+    <string name="product_label">Produk :</string>
+    <string name="alamat_label">Alamat :</string>
+    <string name="sub_label">Sub Total :</string>
+    <string name="btn_pay">pay now</string>
 </resources>

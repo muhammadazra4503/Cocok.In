@@ -18,10 +18,16 @@ object Injection {
         return ApiConfig.getApiService("https://capstone-408207.et.r.appspot.com/")
     }
 
+    private fun providePredictService(): ApiService {
+        return ApiConfig.getApiService("https://mlcapstone-lsfmfisyzq-ts.a.run.app/")
+    }
+
     fun provideRepository(context: Context): UserRepository {
         val pref = UserPreference.getInstance(context.datastore)
         val authApiService = provideAuthService()
         val productApiService = provideProductService()
-        return UserRepository.getInstance(authApiService, productApiService, pref)
+        val predictApiService = providePredictService()
+        return UserRepository.getInstance(authApiService, productApiService, pref, predictApiService)
     }
+
 }

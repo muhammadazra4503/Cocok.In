@@ -1,81 +1,145 @@
 package com.dicoding.cocokin.ui.predict
 
-import android.app.Activity
+import android.Manifest
 import android.content.Intent
-import android.graphics.Bitmap
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
+import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import androidx.fragment.app.Fragment
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
+import android.widget.Toast.makeText
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.dicoding.cocokin.R
 import com.dicoding.cocokin.databinding.FragmentPredictBinding
+import com.dicoding.cocokin.ui.predict.CameraActivity.Companion.CAMERAX_RESULT
+import com.dicoding.cocokin.ui.viewmodel.PredictViewModel
+import com.dicoding.cocokin.ui.viewmodel.ViewModelFactory
+import com.dicoding.cocokin.utils.reduceFileImage
+import com.dicoding.cocokin.utils.uriToFile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PredictFragment : Fragment() {
-    private var _binding: FragmentPredictBinding? = null
+    private val viewModel by viewModels<PredictViewModel> {
+        ViewModelFactory.getInstance(requireContext())
+    }
+    private var _binding : FragmentPredictBinding? = null
     private val binding get() = _binding
 
-    companion object {
-        const val REQUEST_IMAGE_CAPTURE = 1
-        const val REQUEST_FILE_PICK = 2
-    }
+    private var currentImageUri: Uri? = null
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                makeText(context, "Permission request granted", LENGTH_LONG).show()
+            } else {
+                makeText(context, "Permission request denied", LENGTH_LONG).show()
+            }
+        }
+
+    private fun allPermissionsGranted() =
+        ContextCompat.checkSelfPermission(
+            requireContext(),
+            REQUIRED_PERMISSION
+        ) == PackageManager.PERMISSION_GRANTED
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
         _binding = FragmentPredictBinding.inflate(layoutInflater, container, false)
 
-        // Set onClickListener for Camera button
-        binding?.button5?.setOnClickListener {
-            dispatchTakePictureIntent()
-        }
+        binding?.buttonCamera?.setOnClickListener { startCameraX() }
+        binding?.btnGallery?.setOnClickListener { startGallery() }
 
-        // Set onClickListener for Upload button
-        binding?.button4?.setOnClickListener {
-            dispatchPickFileIntent()
+        if (!allPermissionsGranted()) {
+            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
         }
 
         return binding?.root
     }
 
-    private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        try {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-        } catch (e: Exception) {
-            // Handle exception (e.g., if the device doesn't have a camera)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding?.btnPredict?.setOnClickListener {
+            currentImageUri?.let { uri ->
+                val imageFile = uriToFile(uri, requireContext()).reduceFileImage()
+
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        viewModel.predictClothSize(imageFile)
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            showToast("Error predicting size: ${e.message}")
+                        }
+                    }
+                }
+            } ?: showToast(getString(R.string.empty_image_warning))
+        }
+
+        viewModel.predictResult.observe(viewLifecycleOwner) { result ->
+            val resultSize = getString(R.string.predict, result)
+            binding?.tvPredict?.text = resultSize
+            binding?.tvPredict?.visibility = View.VISIBLE
         }
     }
 
-    private fun dispatchPickFileIntent() {
-        val pickFileIntent = Intent(Intent.ACTION_GET_CONTENT)
-        pickFileIntent.type = "image/*"  // Set the MIME type you want to allow
-        startActivityForResult(pickFileIntent, REQUEST_FILE_PICK)
+    private fun startCameraX() {
+        val intent = Intent(context, CameraActivity::class.java)
+        launcherIntentCameraX.launch(intent)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                REQUEST_IMAGE_CAPTURE -> {
-                    val imageBitmap = data?.extras?.get("data") as Bitmap
-                    // Now you can do something with the captured imageBitmap
-                    binding?.imageView?.setImageBitmap(imageBitmap)
-                }
-                REQUEST_FILE_PICK -> {
-                    // Handle the selected file, for example, display its path
-                    val selectedFileUri = data?.data
-                    // Process the selected file URI as needed
-                }
-            }
+    private val launcherIntentCameraX = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == CAMERAX_RESULT) {
+            currentImageUri = it.data?.getStringExtra(CameraActivity.EXTRA_CAMERAX_IMAGE)?.toUri()
+            showImage()
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun showImage() {
+        currentImageUri?.let {
+            Log.d("Image URI", "showImage: $it")
+            binding?.ivPreview?.setImageURI(it)
+        }
+    }
+
+    private fun startGallery() {
+        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private val launcherGallery = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            currentImageUri = uri
+            showImage()
+        } else {
+            Log.d("Photo Picker", "No media selected")
+        }
+    }
+
+    private fun showToast(message: String) {
+        makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
     }
 }

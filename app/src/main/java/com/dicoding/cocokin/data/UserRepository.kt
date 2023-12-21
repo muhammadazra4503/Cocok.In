@@ -10,16 +10,20 @@ import com.dicoding.cocokin.data.remote.response.AddCartResponse
 import com.dicoding.cocokin.data.remote.response.CartResponseItem
 import com.dicoding.cocokin.data.remote.response.DetailProductResponseItem
 import com.dicoding.cocokin.data.remote.response.LoginResponse
+import com.dicoding.cocokin.data.remote.response.PredictSizeResponse
 import com.dicoding.cocokin.data.remote.response.ProductResponseItem
 import com.dicoding.cocokin.data.remote.response.RegisterResponse
 import com.dicoding.cocokin.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
+import okhttp3.MultipartBody
 
 class UserRepository private constructor
     (private val userPreference: UserPreference,
      private val authApiService: ApiService,
-     private val productApiService: ApiService) {
+     private val productApiService: ApiService,
+     private val predictApiService: ApiService) {
+
     suspend fun saveSession(user: UserModel) {
         userPreference.saveSession(user)
     }
@@ -83,6 +87,11 @@ class UserRepository private constructor
         return productApiService.getCart(sessionId)
     }
 
+    suspend fun predictSize(file: MultipartBody.Part): PredictSizeResponse {
+        return predictApiService.predictSize(file)
+    }
+
+
     companion object {
         @Volatile
         private var instance: UserRepository? = null
@@ -90,10 +99,11 @@ class UserRepository private constructor
         fun getInstance(
             authApiService: ApiService,
             productApiService: ApiService,
-            userPreference: UserPreference
+            userPreference: UserPreference,
+            predictApiService: ApiService
         ): UserRepository =
             instance ?: synchronized(this) {
-                instance ?: UserRepository(userPreference, authApiService, productApiService)
+                instance ?: UserRepository(userPreference, authApiService, productApiService, predictApiService)
             }.also { instance = it }
     }
 }

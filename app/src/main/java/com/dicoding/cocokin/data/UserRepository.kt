@@ -1,18 +1,20 @@
 package com.dicoding.cocokin.data
 
+import android.util.Log
 import com.dicoding.cocokin.data.pref.AddToCartRequest
 import com.dicoding.cocokin.data.pref.UserLoginRequest
 import com.dicoding.cocokin.data.pref.UserModel
 import com.dicoding.cocokin.data.pref.UserPreference
 import com.dicoding.cocokin.data.pref.UserRegisterRequest
 import com.dicoding.cocokin.data.remote.response.AddCartResponse
+import com.dicoding.cocokin.data.remote.response.CartResponseItem
 import com.dicoding.cocokin.data.remote.response.DetailProductResponseItem
 import com.dicoding.cocokin.data.remote.response.LoginResponse
-import com.dicoding.cocokin.data.remote.response.ProductResponse
 import com.dicoding.cocokin.data.remote.response.ProductResponseItem
 import com.dicoding.cocokin.data.remote.response.RegisterResponse
 import com.dicoding.cocokin.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 class UserRepository private constructor
     (private val userPreference: UserPreference,
@@ -48,14 +50,37 @@ class UserRepository private constructor
         return productApiService.getProductDetail(id)
     }
 
-    suspend fun register(name: String, email: String, password: String): RegisterResponse {
-        val registerRequest = UserRegisterRequest(name, email, password)
+    suspend fun register(displayName: String, email: String, password: String): RegisterResponse {
+        val registerRequest = UserRegisterRequest(displayName, email, password)
         return authApiService.register(registerRequest)
     }
 
-    suspend fun addToCart(idbarang: String, nama: String, harga: String, sessionid: String, gambar: String): AddCartResponse {
-        val request = AddToCartRequest(idbarang, nama, harga, sessionid, gambar)
-        return productApiService.addToCart(request)
+    suspend fun addToCart(
+        idbarang: String,
+        nama: String,
+        harga: String,
+        gambar: String
+    ): AddCartResponse {
+        val session = getSession().firstOrNull()
+
+        if (session != null) {
+            Log.d("DetailViewModel", "Session ID used: ${session.localId}")
+            val addToCartRequest = AddToCartRequest(
+                idbarang,
+                nama,
+                harga,
+                session.localId,  // Use localId as the session ID
+                gambar
+            )
+            return productApiService.addToCart(addToCartRequest)
+        } else {
+            // Handle the case where there is no valid session
+            throw IllegalStateException("User not logged in")
+        }
+    }
+
+    suspend fun getCart(sessionId: String): List<CartResponseItem> {
+        return productApiService.getCart(sessionId)
     }
 
     companion object {
@@ -71,5 +96,4 @@ class UserRepository private constructor
                 instance ?: UserRepository(userPreference, authApiService, productApiService)
             }.also { instance = it }
     }
-
 }

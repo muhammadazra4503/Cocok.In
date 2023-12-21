@@ -23,6 +23,9 @@ class ViewModelFactory(private val repository: UserRepository): ViewModelProvide
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(repository) as T
             }
+            modelClass.isAssignableFrom(CartViewModel::class.java) -> {
+                CartViewModel(repository) as T
+            }
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(repository) as T
             }

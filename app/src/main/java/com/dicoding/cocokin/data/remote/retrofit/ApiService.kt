@@ -4,6 +4,7 @@ import com.dicoding.cocokin.data.pref.AddToCartRequest
 import com.dicoding.cocokin.data.pref.UserLoginRequest
 import com.dicoding.cocokin.data.pref.UserRegisterRequest
 import com.dicoding.cocokin.data.remote.response.AddCartResponse
+import com.dicoding.cocokin.data.remote.response.CartResponseItem
 import com.dicoding.cocokin.data.remote.response.DetailProductResponseItem
 import com.dicoding.cocokin.data.remote.response.LoginResponse
 import com.dicoding.cocokin.data.remote.response.ProductResponseItem
@@ -12,6 +13,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
     @POST("v1/accounts:signInWithPassword?key=AIzaSyCraSu3TwUfF0VAgVPiVXUZOJsPgxP33A8")
@@ -34,4 +36,8 @@ interface ApiService {
 
     @POST("api/masukkeranjang")
     suspend fun addToCart(@Body request: AddToCartRequest): AddCartResponse
+
+    @GET("api/keranjang/{sessionid}")
+    suspend fun getCart(@Path("sessionid") sessionId: String): List<CartResponseItem>
+
 }

@@ -7,33 +7,40 @@ import androidx.lifecycle.viewModelScope
 import com.dicoding.cocokin.data.Result
 import com.dicoding.cocokin.data.UserRepository
 import com.dicoding.cocokin.data.remote.response.RegisterResponse
-import com.dicoding.cocokin.data.pref.UserModel
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 class RegisterViewModel(private val repository: UserRepository) : ViewModel() {
     private val _registerResult = MutableLiveData<Result>()
     val registerResult: LiveData<Result>
         get() = _registerResult
 
-    fun saveSession(user: UserModel) {
-        viewModelScope.launch {
-            repository.saveSession(user)
-        }
-    }
-
-    fun register(displayNama: String,email: String, password: String) {
+    fun register(displayName: String, email: String, password: String) {
         viewModelScope.launch {
             try {
-                val registerResponse: RegisterResponse = repository.register(displayNama, email, password)
-                // Sesuaikan dengan properti yang sesuai dalam RegisterResponse
-                if (registerResponse.idToken.isNotBlank()) {
-                    saveSession(UserModel(email, registerResponse.idToken, true))
+                val registerResponse: RegisterResponse = repository.register(displayName, email, password)
+                if (registerResponse.localId.isNotBlank()) {
                     _registerResult.value = Result.Success
                 } else {
                     _registerResult.value = Result.Error("Registration failed")
                 }
+            } catch (e: HttpException) {
+                // Handle HTTP-related exceptions (e.g., 4xx, 5xx status codes)
+                val errorMessage = when (e.code()) {
+                    401 -> "Unauthorized: Invalid credentials"
+                    403 -> "Forbidden: Insufficient permissions"
+                    404 -> "Not Found: Resource not available"
+                    // Add more cases for specific HTTP status codes if needed
+                    else -> "HTTP Error: ${e.message()}"
+                }
+                _registerResult.value = Result.Error(errorMessage)
+            } catch (e: IOException) {
+                // Handle network-related exceptions
+                _registerResult.value = Result.Error("Network error: ${e.message}")
             } catch (e: Exception) {
-                _registerResult.value = Result.Error("An error occurred: ${e.message}")
+                // Handle other types of exceptions
+                _registerResult.value = Result.Error("An unexpected error occurred: ${e.message}")
             }
         }
     }

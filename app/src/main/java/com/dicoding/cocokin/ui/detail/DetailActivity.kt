@@ -2,6 +2,7 @@ package com.dicoding.cocokin.ui.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
@@ -40,16 +41,33 @@ class DetailActivity : AppCompatActivity() {
                     .load(productDetail.gambar)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(binding.ivProduct)
+
+                binding.buttonCart.setOnClickListener {
+                    // Call addToCart method when the button is clicked
+                    binding.progressBar.visibility = View.VISIBLE
+
+                    viewModel.addToCart(
+                        productDetail.id.toString(),
+                        productDetail.nama,
+                        productDetail.harga.toString(),
+                        productDetail.gambar
+                    )
+                }
             } else {
                 Toast.makeText(this, "Product details not available", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
 
+        viewModel.addToCartResult.observe(this) { addToCartResult ->
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(this, "Item successfully added to cart!", Toast.LENGTH_SHORT).show()
+        }
+
         viewModel.errorState.observe(this) { errorMessage ->
+            binding.progressBar.visibility = View.GONE
             Toast.makeText(this, errorMessage ?: "An unexpected error occurred", Toast.LENGTH_SHORT)
                 .show()
         }
-
     }
 }

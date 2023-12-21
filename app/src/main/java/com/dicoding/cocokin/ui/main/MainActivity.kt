@@ -9,6 +9,7 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import com.dicoding.cocokin.R
 import com.dicoding.cocokin.databinding.ActivityMainBinding
+import com.dicoding.cocokin.ui.cart.CartFragment
 import com.dicoding.cocokin.ui.predict.PredictFragment
 import com.dicoding.cocokin.ui.profile.ProfileFragment
 import com.dicoding.cocokin.ui.viewmodel.MainViewModel
@@ -42,12 +43,12 @@ class MainActivity : AppCompatActivity() {
                         .commit()
                     return@setOnNavigationItemSelectedListener true
                 }
-//                R.id.navigation_cart -> {
-//                    supportFragmentManager.beginTransaction()
-//                        .replace(R.id.fragmentContainer, CartFragment())
-//                        .commit()
-//                    return@setOnNavigationItemSelectedListener true
-//                }
+                R.id.navigation_cart -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, CartFragment())
+                        .commit()
+                    return@setOnNavigationItemSelectedListener true
+                }
                 R.id.navigation_predict -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainer, PredictFragment())

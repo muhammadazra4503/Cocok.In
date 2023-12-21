@@ -2,25 +2,34 @@ package com.dicoding.cocokin.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
+data class CartResponse(
+
+	@field:SerializedName("CartResponse")
+	val cartResponse: List<CartResponseItem>
+)
+
 data class CartResponseItem(
-    @SerializedName("idkeranjang")
-    val idKeranjang: Int,
 
-    @SerializedName("idbarang")
-    val idBarang: Int,
+	@field:SerializedName("idkeranjang")
+	val idkeranjang: Int,
 
-    @SerializedName("sessionid")
-    val sessionId: String,
+	@field:SerializedName("idbarang")
+	val idbarang: Int,
 
-    @SerializedName("nama")
-    val nama: String,
+	@field:SerializedName("nama")
+	val nama: String,
 
-    @SerializedName("harga")
-    val harga: Int,
+	@field:SerializedName("harga")
+	val harga: Int,
 
-    @SerializedName("gambar")
-    val gambar: String,
+	@field:SerializedName("catatan")
+	val catatan: String,
 
-    @SerializedName("catatan")
-    val catatan: String
+	@field:SerializedName("sessionid")
+	val sessionid: String,
+
+	@field:SerializedName("gambar")
+	val gambar: String,
+
+	var isChecked: Boolean = false
 )

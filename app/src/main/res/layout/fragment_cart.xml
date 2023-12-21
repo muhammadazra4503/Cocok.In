@@ -1,69 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.cart.CartFragment">
 
-    <LinearLayout
-        android:id="@+id/cartContent"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_height="match_parent">
 
-        <ScrollView
-            android:id="@+id/scrollView2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvCart"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/item_cart"/>
-        </ScrollView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCart"
+            android:layout_width="393dp"
+            android:layout_height="622dp"
+            android:padding="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.109"
+            tools:listitem="@layout/item_cart" />
 
         <Button
-            android:id="@+id/btnCheckout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Checkout"/>
-
-        <CheckBox
-            android:id="@+id/checkBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Semua"/>
-    </LinearLayout>
-
-    <!-- Tampilan yang ditampilkan ketika keranjang kosong -->
-    <LinearLayout
-        android:id="@+id/emptyCartView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Keranjang kosong"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:layout_gravity="center"/>
-
-        <!-- Tambahkan elemen UI tambahan sesuai kebutuhan -->
-
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:id="@+id/button"
+            android:layout_width="139dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="632dp"
+            android:text="Checkout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

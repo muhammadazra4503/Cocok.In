@@ -37,7 +37,7 @@ class UserRepository private constructor
     }
 
     suspend fun login(email: String, password: String): LoginResponse {
-        val loginRequest = UserLoginRequest(email, password, true)
+        val loginRequest = UserLoginRequest(email, password)
         val response = authApiService.login(loginRequest)
 
         if (response.registered) {

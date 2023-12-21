@@ -1,5 +1,6 @@
 package com.dicoding.cocokin.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -50,6 +51,37 @@ class CartViewModel(private val repository: UserRepository) : ViewModel() {
         if (index != -1) {
             currentCartItems[index].isChecked = isChecked
             _cartItems.value = currentCartItems
+        }
+    }
+
+    fun deleteCartItem(idkeranjang: String) {
+        viewModelScope.launch {
+            try {
+                // Log before attempting to delete
+                Log.d("CartViewModel", "Attempting to delete item with idkeranjang: $idkeranjang")
+
+                repository.deleteCartItem(idkeranjang)
+
+                // Log after successful delete
+                Log.d("CartViewModel", "Successfully deleted item with idkeranjang: $idkeranjang")
+
+            } catch (e: HttpException) {
+                // Handle HTTP exceptions for delete operation
+                val errorMessage = when (val responseCode = e.code()) {
+                    401 -> "Unauthorized. Please log in again."
+                    403 -> "Access forbidden."
+
+                    else -> "Failed to delete cart item. Error code: $responseCode"
+                }
+                // Log HTTP exception
+                Log.e("CartViewModel", "HTTP Exception while deleting item. Error: $errorMessage", e)
+                _errorState.value = errorMessage
+            } catch (e: Exception) {
+                // Handle other exceptions for delete operation
+                // Log other exceptions
+                Log.e("CartViewModel", "Exception while deleting item. Error: ${e.message}", e)
+                _errorState.value = "Failed to delete cart item: ${e.message}"
+            }
         }
     }
 }

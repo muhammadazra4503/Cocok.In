@@ -1,10 +1,12 @@
 package com.dicoding.cocokin.data.remote.retrofit
 
 import com.dicoding.cocokin.data.pref.AddToCartRequest
+import com.dicoding.cocokin.data.pref.DeleteRequest
 import com.dicoding.cocokin.data.pref.UserLoginRequest
 import com.dicoding.cocokin.data.pref.UserRegisterRequest
 import com.dicoding.cocokin.data.remote.response.AddCartResponse
 import com.dicoding.cocokin.data.remote.response.CartResponseItem
+import com.dicoding.cocokin.data.remote.response.DeleteResponse
 import com.dicoding.cocokin.data.remote.response.DetailProductResponseItem
 import com.dicoding.cocokin.data.remote.response.LoginResponse
 import com.dicoding.cocokin.data.remote.response.PredictSizeResponse
@@ -12,7 +14,9 @@ import com.dicoding.cocokin.data.remote.response.ProductResponseItem
 import com.dicoding.cocokin.data.remote.response.RegisterResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -50,4 +54,6 @@ interface ApiService {
         @Part file: MultipartBody.Part
     ): PredictSizeResponse
 
+    @DELETE("api/hapusItemKeranjang/{idkeranjang}")
+    suspend fun deleteCartItem(@Path("idkeranjang") idkeranjang: String): DeleteResponse
 }

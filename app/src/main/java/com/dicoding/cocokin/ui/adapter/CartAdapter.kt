@@ -14,9 +14,14 @@ import com.dicoding.cocokin.databinding.ItemCartBinding
 class CartAdapter : ListAdapter<CartResponseItem, CartAdapter.CartViewHolder>(DiffCallback()) {
 
     private var onCheckBoxClickListener: ((CartResponseItem, Boolean) -> Unit)? = null
+    private var onDeleteClickListener: ((CartResponseItem) -> Unit)? = null
 
     fun setOnCheckBoxClickListener(listener: (CartResponseItem, Boolean) -> Unit) {
         onCheckBoxClickListener = listener
+    }
+
+    fun setOnDeleteClickListener(listener: (CartResponseItem) -> Unit) {
+        onDeleteClickListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
@@ -38,6 +43,10 @@ class CartAdapter : ListAdapter<CartResponseItem, CartAdapter.CartViewHolder>(Di
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             onCheckBoxClickListener?.invoke(cart, isChecked)
         }
+
+        holder.deleteCart.setOnClickListener {
+            onDeleteClickListener?.invoke(cart)
+        }
     }
 
     class CartViewHolder(private val binding: ItemCartBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -46,6 +55,7 @@ class CartAdapter : ListAdapter<CartResponseItem, CartAdapter.CartViewHolder>(Di
         val checkBox = binding.checkBox
         val tvProduct = binding.tvProduct
         val tvPrice = binding.tvPrice
+        val deleteCart = binding.deleteCart
     }
 
     private class DiffCallback : DiffUtil.ItemCallback<CartResponseItem>() {

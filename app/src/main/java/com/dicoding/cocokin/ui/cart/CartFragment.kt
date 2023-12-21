@@ -60,6 +60,10 @@ class CartFragment : Fragment() {
             // Handle checkbox click, e.g., update the ViewModel
             viewModel.updateCartItemState(cartItem, isChecked)
         }
+        adapter.setOnDeleteClickListener { cartItem ->
+            // Handle delete action, e.g., call the deleteCartItem function in the ViewModel
+            viewModel.deleteCartItem(cartItem.idkeranjang.toString())
+        }
         binding?.rvCart?.adapter = adapter
     }
 }

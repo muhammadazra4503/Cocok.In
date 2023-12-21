@@ -2,12 +2,14 @@ package com.dicoding.cocokin.data
 
 import android.util.Log
 import com.dicoding.cocokin.data.pref.AddToCartRequest
+import com.dicoding.cocokin.data.pref.DeleteRequest
 import com.dicoding.cocokin.data.pref.UserLoginRequest
 import com.dicoding.cocokin.data.pref.UserModel
 import com.dicoding.cocokin.data.pref.UserPreference
 import com.dicoding.cocokin.data.pref.UserRegisterRequest
 import com.dicoding.cocokin.data.remote.response.AddCartResponse
 import com.dicoding.cocokin.data.remote.response.CartResponseItem
+import com.dicoding.cocokin.data.remote.response.DeleteResponse
 import com.dicoding.cocokin.data.remote.response.DetailProductResponseItem
 import com.dicoding.cocokin.data.remote.response.LoginResponse
 import com.dicoding.cocokin.data.remote.response.PredictSizeResponse
@@ -17,6 +19,7 @@ import com.dicoding.cocokin.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import okhttp3.MultipartBody
+import retrofit2.Response
 
 class UserRepository private constructor
     (private val userPreference: UserPreference,
@@ -83,6 +86,10 @@ class UserRepository private constructor
         }
     }
 
+    suspend fun deleteCartItem(idkeranjang: String): DeleteResponse {
+        return productApiService.deleteCartItem(idkeranjang)
+    }
+
     suspend fun getCart(sessionId: String): List<CartResponseItem> {
         return productApiService.getCart(sessionId)
     }
@@ -90,7 +97,6 @@ class UserRepository private constructor
     suspend fun predictSize(file: MultipartBody.Part): PredictSizeResponse {
         return predictApiService.predictSize(file)
     }
-
 
     companion object {
         @Volatile

@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.dicoding.cocokin.data.Result
 import com.dicoding.cocokin.databinding.ActivityLoginBinding
+import com.dicoding.cocokin.ui.forgotpass.ForgotPasswordActivity
 import com.dicoding.cocokin.ui.main.MainActivity
 import com.dicoding.cocokin.ui.viewmodel.LoginViewModel
 import com.dicoding.cocokin.ui.viewmodel.ViewModelFactory
@@ -38,6 +39,11 @@ class LoginActivity : AppCompatActivity() {
                 showLoading(true)
                 viewModel.login(email, password)
             }
+        }
+
+        binding.tvForgot.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
         }
 
         viewModel.loginResult.observe(this) { result ->

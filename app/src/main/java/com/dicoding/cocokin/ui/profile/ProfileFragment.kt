@@ -7,8 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.dicoding.cocokin.R
-import com.dicoding.cocokin.databinding.FragmentHomeBinding
+import androidx.lifecycle.Observer
 import com.dicoding.cocokin.databinding.FragmentProfileBinding
 import com.dicoding.cocokin.ui.viewmodel.ProfileViewModel
 import com.dicoding.cocokin.ui.viewmodel.ViewModelFactory
@@ -18,17 +17,28 @@ class ProfileFragment : Fragment() {
     private val viewModel by viewModels<ProfileViewModel> {
         ViewModelFactory.getInstance(requireContext())
     }
-    private var _binding : FragmentProfileBinding? = null
+    private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        _binding = FragmentProfileBinding.inflate(layoutInflater, container, false)
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentProfileBinding.inflate(layoutInflater, container, false)
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Observe user session changes
+        viewModel.userSession.observe(viewLifecycleOwner, Observer { user ->
+            user?.let {
+                // Update UI with user data
+//                binding?.tvName?.text = it.displayName
+                binding?.tvEmail?.text = it.email
+            }
+        })
 
         binding?.logoutButton?.setOnClickListener {
             logOut()
@@ -41,5 +51,10 @@ class ProfileFragment : Fragment() {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         activity?.finish()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

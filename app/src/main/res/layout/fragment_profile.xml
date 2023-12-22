@@ -10,10 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <!-- TextView for Riwayat -->
-
-
         <TextView
             android:id="@+id/tvName"
             android:layout_width="123dp"
@@ -29,8 +25,8 @@
 
         <TextView
             android:id="@+id/tvEmail"
-            android:layout_width="162dp"
-            android:layout_height="27dp"
+            android:layout_width="271dp"
+            android:layout_height="31dp"
             android:gravity="center"
             android:text="Email"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -31,11 +32,15 @@ class HomeFragment : Fragment() {
             this?.searchView?.setupWithSearchBar(searchBar)
             this?.searchView
                 ?.editText
-                ?.setOnEditorActionListener { textView, actionId, event ->
-                    this.searchBar.text
-                    searchView.hide()
-                    Toast.makeText(requireContext(), searchView.text, Toast.LENGTH_SHORT).show()
-                    false
+                ?.setOnEditorActionListener { _, actionId, _ ->
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        // Fetch product data with the entered search query
+                        viewModel.fetchProductData()
+                        searchView.hide()
+                        true
+                    } else {
+                        false
+                    }
                 }
         }
 

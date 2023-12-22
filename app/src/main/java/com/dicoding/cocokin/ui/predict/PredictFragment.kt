@@ -82,7 +82,15 @@ class PredictFragment : Fragment() {
 
                 lifecycleScope.launch(Dispatchers.IO) {
                     try {
-                        viewModel.predictClothSize(imageFile)
+                        // Call the predictClothSize function and get the result directly
+                        val result = viewModel.predictClothSize(imageFile)
+
+                        // Handle the result immediately
+                        withContext(Dispatchers.Main) {
+                            val resultSize = getString(R.string.predict, result)
+                            binding?.tvPredict?.text = resultSize
+                            binding?.tvPredict?.visibility = View.VISIBLE
+                        }
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
                             showToast("Error predicting size: ${e.message}")
@@ -90,12 +98,6 @@ class PredictFragment : Fragment() {
                     }
                 }
             } ?: showToast(getString(R.string.empty_image_warning))
-        }
-
-        viewModel.predictResult.observe(viewLifecycleOwner) { result ->
-            val resultSize = getString(R.string.predict, result)
-            binding?.tvPredict?.text = resultSize
-            binding?.tvPredict?.visibility = View.VISIBLE
         }
     }
 

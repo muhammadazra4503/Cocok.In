@@ -29,6 +29,9 @@ class ViewModelFactory(private val repository: UserRepository): ViewModelProvide
             modelClass.isAssignableFrom(PredictViewModel::class.java) -> {
                 PredictViewModel(repository) as T
             }
+            modelClass.isAssignableFrom(CheckoutViewModel::class.java) -> {
+                CheckoutViewModel(repository) as T
+            }
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(repository) as T
             }

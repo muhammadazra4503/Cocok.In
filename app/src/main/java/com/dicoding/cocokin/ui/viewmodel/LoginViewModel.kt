@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.cocokin.data.Result
 import com.dicoding.cocokin.data.UserRepository
+import com.dicoding.cocokin.data.pref.UserModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -18,8 +19,10 @@ class LoginViewModel(private val repository: UserRepository):ViewModel() {
     fun login(email: String, password: String) {
         viewModelScope.launch {
             try {
-                val loginResponse = repository.login(email, password)
+                val (loginResponse, displayName) = repository.login(email, password)
+
                 if (loginResponse.registered) {
+                    repository.saveSession(UserModel(email, loginResponse.localId, true, displayName))
                     _loginResult.value = Result.Success
                 } else {
                     _loginResult.value = Result.Error("Login failed")
@@ -42,4 +45,5 @@ class LoginViewModel(private val repository: UserRepository):ViewModel() {
             }
         }
     }
+
 }

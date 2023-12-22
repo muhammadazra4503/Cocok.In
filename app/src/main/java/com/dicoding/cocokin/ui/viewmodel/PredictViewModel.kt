@@ -17,19 +17,18 @@ class PredictViewModel(private val repository: UserRepository) : ViewModel() {
     val predictResult: LiveData<String>
         get() = _predictResult
 
-    fun predictClothSize(file: File) {
-        viewModelScope.launch {
-            try {
-                val filePart = MultipartBody.Part.createFormData("file", file.name, file.asRequestBody())
-                val predictedSize = repository.predictSize(filePart)
-                _predictResult.value = predictedSize.sizePredicted
-            } catch (e: Exception) {
-                // Handle errors or exceptions
-                _predictResult.value = "Error predicting size: ${e.message}"
-            }
+    suspend fun predictClothSize(file: File): String {
+        return try {
+            val filePart = MultipartBody.Part.createFormData("file", file.name, file.asRequestBody())
+            val predictedSize = repository.predictSize(filePart)
+            predictedSize.sizePredicted
+        } catch (e: Exception) {
+            // Handle errors or exceptions
+            throw RuntimeException("Error predicting size: ${e.message}")
         }
     }
 }
+
 
 
 

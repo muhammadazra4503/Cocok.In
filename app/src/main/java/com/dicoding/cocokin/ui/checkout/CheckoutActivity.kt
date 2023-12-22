@@ -1,20 +1,28 @@
 package com.dicoding.cocokin.ui.checkout
 
 
+import android.content.Intent
 import android.graphics.Rect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.Button
-import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import com.dicoding.cocokin.R
+import com.dicoding.cocokin.data.Result
 import com.dicoding.cocokin.data.remote.response.CartResponseItem
 import com.dicoding.cocokin.databinding.ActivityCheckoutBinding
-import com.google.android.material.textfield.TextInputEditText
+import com.dicoding.cocokin.ui.main.HomeFragment
+import com.dicoding.cocokin.ui.main.MainActivity
+import com.dicoding.cocokin.ui.viewmodel.CheckoutViewModel
+import com.dicoding.cocokin.ui.viewmodel.ViewModelFactory
 
 class CheckoutActivity : AppCompatActivity() {
 
+    private val viewModel by viewModels<CheckoutViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
     private lateinit var button: Button
     private lateinit var binding: ActivityCheckoutBinding
 
@@ -49,7 +57,6 @@ class CheckoutActivity : AppCompatActivity() {
         val tvProduct = binding.tvProduct
         val tvNote = binding.tvNote
         val tvPrice = binding.tvPrice
-        val etAddress = binding.addressEditText
 
         // Display information for each selected item
         val productText = StringBuilder()
@@ -65,5 +72,37 @@ class CheckoutActivity : AppCompatActivity() {
         tvProduct.text = productText.toString()
         tvNote.text = noteText.toString()
         tvPrice.text = getString(R.string.harga, totalPrice)
+
+        viewModel.paymentResult.observe(this) { result ->
+            when (result) {
+                is Result.Success -> {
+                    // Payment successful, update local cart logic if needed
+                    Toast.makeText(this, "Payment successful", Toast.LENGTH_SHORT).show()
+
+                    val etAddress = binding.addressEditText.text.toString()
+                    viewModel.processPayment(selectedItems, etAddress)
+
+                    // Navigate back to the home activity
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                }
+                is Result.Error -> {
+                    // Payment failed, show an error message
+                    Toast.makeText(
+                        this,
+                        "Payment failed: ${result.errorMessage}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                else -> {}
+            }
+        }
+        // Set up a click listener for the "Pay Now" button
+        button.setOnClickListener {
+            val etAddress = binding.addressEditText.text.toString()
+            viewModel.processPayment(selectedItems, etAddress)
+        }
     }
 }

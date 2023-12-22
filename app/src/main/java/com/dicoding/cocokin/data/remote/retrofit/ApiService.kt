@@ -1,14 +1,16 @@
 package com.dicoding.cocokin.data.remote.retrofit
 
 import com.dicoding.cocokin.data.pref.AddToCartRequest
-import com.dicoding.cocokin.data.pref.DeleteRequest
+import com.dicoding.cocokin.data.pref.PaymentHistoryRequest
 import com.dicoding.cocokin.data.pref.UserLoginRequest
 import com.dicoding.cocokin.data.pref.UserRegisterRequest
 import com.dicoding.cocokin.data.remote.response.AddCartResponse
 import com.dicoding.cocokin.data.remote.response.CartResponseItem
 import com.dicoding.cocokin.data.remote.response.DeleteResponse
 import com.dicoding.cocokin.data.remote.response.DetailProductResponseItem
+import com.dicoding.cocokin.data.remote.response.HistoryResponseItem
 import com.dicoding.cocokin.data.remote.response.LoginResponse
+import com.dicoding.cocokin.data.remote.response.PaymentHistoryResponse
 import com.dicoding.cocokin.data.remote.response.PredictSizeResponse
 import com.dicoding.cocokin.data.remote.response.ProductResponseItem
 import com.dicoding.cocokin.data.remote.response.RegisterResponse
@@ -56,4 +58,11 @@ interface ApiService {
 
     @DELETE("api/hapusItemKeranjang/{idkeranjang}")
     suspend fun deleteCartItem(@Path("idkeranjang") idkeranjang: String): DeleteResponse
+
+    @POST("api/masukriwayat")
+    suspend fun paymentHistory(@Body request: PaymentHistoryRequest): PaymentHistoryResponse
+
+    @GET("api/riwayat/{sessionid}")
+    suspend fun getHistory(@Path("sessionid") sessionId: String): List<HistoryResponseItem>
+
 }

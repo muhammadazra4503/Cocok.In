@@ -12,6 +12,7 @@ import com.dicoding.cocokin.R
 import com.dicoding.cocokin.data.remote.response.ProductResponseItem
 import com.dicoding.cocokin.databinding.ItemHomeBinding
 import com.dicoding.cocokin.ui.detail.DetailActivity
+import java.util.Locale
 
 
 class HomeAdapter : ListAdapter<ProductResponseItem, HomeAdapter.MyViewHolder>(DIFF_CALLBACK) {
@@ -47,6 +48,23 @@ class HomeAdapter : ListAdapter<ProductResponseItem, HomeAdapter.MyViewHolder>(D
             intent.putExtra("PRODUCT_ID", product.id)
             holder.itemView.context.startActivity(intent)
         }
+    }
+
+    fun filter(query: CharSequence?) {
+        val filteredList = mutableListOf<ProductResponseItem>()
+
+        if (!query.isNullOrBlank()) {
+            val searchQuery = query.toString().toLowerCase(Locale.getDefault())
+            currentList.forEach {
+                if (it.nama.toLowerCase(Locale.getDefault()).contains(searchQuery)) {
+                    filteredList.add(it)
+                }
+            }
+        } else {
+            filteredList.addAll(currentList)
+        }
+
+        submitList(filteredList)
     }
 
     companion object {

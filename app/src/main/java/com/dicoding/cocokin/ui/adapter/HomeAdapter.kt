@@ -50,23 +50,6 @@ class HomeAdapter : ListAdapter<ProductResponseItem, HomeAdapter.MyViewHolder>(D
         }
     }
 
-    fun filter(query: CharSequence?) {
-        val filteredList = mutableListOf<ProductResponseItem>()
-
-        if (!query.isNullOrBlank()) {
-            val searchQuery = query.toString().toLowerCase(Locale.getDefault())
-            currentList.forEach {
-                if (it.nama.toLowerCase(Locale.getDefault()).contains(searchQuery)) {
-                    filteredList.add(it)
-                }
-            }
-        } else {
-            filteredList.addAll(currentList)
-        }
-
-        submitList(filteredList)
-    }
-
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ProductResponseItem>() {
             override fun areItemsTheSame(oldItem: ProductResponseItem, newItem: ProductResponseItem): Boolean {

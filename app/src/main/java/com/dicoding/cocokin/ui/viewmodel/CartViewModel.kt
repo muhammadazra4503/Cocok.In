@@ -16,8 +16,15 @@ class CartViewModel(private val repository: UserRepository) : ViewModel() {
     private val _cartItems = MutableLiveData<List<CartResponseItem>>()
     val cartItems: LiveData<List<CartResponseItem>> get() = _cartItems
 
+    private val _selectedItems = MutableLiveData<Set<CartResponseItem>>()
+    val selectedItems: LiveData<Set<CartResponseItem>> get() = _selectedItems
+
     private val _errorState = MutableLiveData<String?>()
     val errorState: LiveData<String?> get() = _errorState
+
+    fun getSelectedItems(): Set<CartResponseItem> {
+        return _selectedItems.value.orEmpty()
+    }
 
     fun fetchCart() {
         viewModelScope.launch {
@@ -51,6 +58,9 @@ class CartViewModel(private val repository: UserRepository) : ViewModel() {
         if (index != -1) {
             currentCartItems[index].isChecked = isChecked
             _cartItems.value = currentCartItems
+
+            val selectedItems = currentCartItems.filter { it.isChecked }.toSet()
+            _selectedItems.value = selectedItems
         }
     }
 
@@ -64,7 +74,7 @@ class CartViewModel(private val repository: UserRepository) : ViewModel() {
 
                 // Log after successful delete
                 Log.d("CartViewModel", "Successfully deleted item with idkeranjang: $idkeranjang")
-
+                fetchCart()
             } catch (e: HttpException) {
                 // Handle HTTP exceptions for delete operation
                 val errorMessage = when (val responseCode = e.code()) {

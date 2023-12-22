@@ -1,5 +1,7 @@
 package com.dicoding.cocokin.data.remote.response
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 data class CartResponse(
@@ -8,27 +10,62 @@ data class CartResponse(
 )
 
 data class CartResponseItem(
-
-	@field:SerializedName("idkeranjang")
+	@SerializedName("idkeranjang")
 	val idkeranjang: Int,
 
-	@field:SerializedName("idbarang")
+	@SerializedName("idbarang")
 	val idbarang: Int,
 
-	@field:SerializedName("nama")
+	@SerializedName("nama")
 	val nama: String,
 
-	@field:SerializedName("harga")
+	@SerializedName("harga")
 	val harga: Int,
 
-	@field:SerializedName("catatan")
-	val catatan: String,
+	@SerializedName("catatan")
+	var catatan: String? = "",
 
-	@field:SerializedName("sessionid")
+	@SerializedName("sessionid")
 	val sessionid: String,
 
-	@field:SerializedName("gambar")
+	@SerializedName("gambar")
 	val gambar: String,
 
 	var isChecked: Boolean = false
-)
+) : Parcelable {
+	constructor(parcel: Parcel) : this(
+		parcel.readInt(),
+		parcel.readInt(),
+		parcel.readString()!!,
+		parcel.readInt(),
+		parcel.readString(),
+		parcel.readString()!!,
+		parcel.readString()!!,
+		parcel.readByte() != 0.toByte()
+	)
+
+	override fun writeToParcel(parcel: Parcel, flags: Int) {
+		parcel.writeInt(idkeranjang)
+		parcel.writeInt(idbarang)
+		parcel.writeString(nama)
+		parcel.writeInt(harga)
+		parcel.writeString(catatan)
+		parcel.writeString(sessionid)
+		parcel.writeString(gambar)
+		parcel.writeByte(if (isChecked) 1 else 0)
+	}
+
+	override fun describeContents(): Int {
+		return 0
+	}
+
+	companion object CREATOR : Parcelable.Creator<CartResponseItem> {
+		override fun createFromParcel(parcel: Parcel): CartResponseItem {
+			return CartResponseItem(parcel)
+		}
+
+		override fun newArray(size: Int): Array<CartResponseItem?> {
+			return arrayOfNulls(size)
+		}
+	}
+}

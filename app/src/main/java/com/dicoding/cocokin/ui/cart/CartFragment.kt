@@ -1,5 +1,6 @@
 package com.dicoding.cocokin.ui.cart
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,8 +10,10 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.cocokin.data.remote.response.CartResponseItem
 import com.dicoding.cocokin.databinding.FragmentCartBinding
 import com.dicoding.cocokin.ui.adapter.CartAdapter
+import com.dicoding.cocokin.ui.checkout.CheckoutActivity
 import com.dicoding.cocokin.ui.viewmodel.CartViewModel
 import com.dicoding.cocokin.ui.viewmodel.ViewModelFactory
 
@@ -46,6 +49,18 @@ class CartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding?.btnCheckout?.setOnClickListener {
+            val selectedItems = viewModel.getSelectedItems()
+            if (selectedItems.isNotEmpty()) {
+                // Navigate to CheckoutActivity with selected items
+                val intent = Intent(requireContext(), CheckoutActivity::class.java)
+                intent.putExtra("selectedItems", ArrayList(selectedItems))
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireContext(), "Please select items before checkout", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         viewModel.fetchCart()
     }

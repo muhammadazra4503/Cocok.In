@@ -23,7 +23,7 @@
             tools:listitem="@layout/item_cart" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnCheckout"
             android:layout_width="139dp"
             android:layout_height="48dp"
             android:layout_marginTop="632dp"

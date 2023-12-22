@@ -20,5 +20,5 @@
     <string name="product_label">Produk :</string>
     <string name="alamat_label">Alamat :</string>
     <string name="sub_label">Sub Total :</string>
-    <string name="btn_pay">pay now</string>
+    <string name="btn_pay">Pay Now</string>
 </resources>

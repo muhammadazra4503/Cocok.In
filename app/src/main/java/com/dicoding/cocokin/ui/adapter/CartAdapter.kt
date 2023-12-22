@@ -1,5 +1,7 @@
 package com.dicoding.cocokin.ui.adapter
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -38,7 +40,25 @@ class CartAdapter : ListAdapter<CartResponseItem, CartAdapter.CartViewHolder>(Di
             .into(holder.ivProduct)
         holder.tvProduct.text = cart.nama
         holder.tvPrice.text = String.format(holder.itemView.context.getString(R.string.harga), cart.harga)
-        holder.noteEditText.setText(cart.catatan)
+        // Update the noteEditText based on the cart item's catatan
+        holder.noteEditText.text = Editable.Factory.getInstance().newEditable(cart.catatan.orEmpty())
+
+        // Save the changes in the EditText to the corresponding CartResponseItem
+        holder.noteEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // No action needed
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Update the catatan property of the corresponding CartResponseItem
+                cart.catatan = s.toString()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // No action needed
+            }
+        })
+
 
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             onCheckBoxClickListener?.invoke(cart, isChecked)

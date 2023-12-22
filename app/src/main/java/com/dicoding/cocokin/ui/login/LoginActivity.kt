@@ -4,16 +4,16 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import com.dicoding.cocokin.data.LoginResult
+import com.dicoding.cocokin.data.Result
 import com.dicoding.cocokin.databinding.ActivityLoginBinding
-import com.dicoding.cocokin.ui.MainActivity
+import com.dicoding.cocokin.ui.forgotpass.ForgotPasswordActivity
+import com.dicoding.cocokin.ui.main.MainActivity
 import com.dicoding.cocokin.ui.viewmodel.LoginViewModel
 import com.dicoding.cocokin.ui.viewmodel.ViewModelFactory
 
@@ -41,18 +41,23 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        binding.tvForgot.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
+        }
+
         viewModel.loginResult.observe(this) { result ->
             // Hide loading bar
             showLoading(false)
             when (result) {
-                is LoginResult.Success -> {
+                is Result.Success -> {
                     showLoginAlertDialog(
                         "Success",
                         "Login telah berhasil!",
                         true
                     )
                 }
-                is LoginResult.Error -> {
+                is Result.Error -> {
                     showLoginAlertDialog(
                         "Failed",
                         "Login gagal!",

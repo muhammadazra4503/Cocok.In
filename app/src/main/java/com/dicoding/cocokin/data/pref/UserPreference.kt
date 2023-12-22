@@ -1,6 +1,7 @@
 package com.dicoding.cocokin.data.pref
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -16,18 +17,23 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
     suspend fun saveSession(user: UserModel) {
         dataStore.edit { preferences ->
             preferences[EMAIL_KEY] = user.email
-            preferences[TOKEN_KEY] = user.token
+            preferences[TOKEN_KEY] = user.localId
             preferences[IS_LOGIN_KEY] = true
+            preferences[DISPLAY_NAME_KEY] = user.displayName // Save the displayName
         }
+        Log.d("UserRepository", "Session saved: ${user.localId}")
     }
 
     fun getSession(): Flow<UserModel> {
         return dataStore.data.map { preferences ->
-            UserModel(
+            val userModel = UserModel(
                 preferences[EMAIL_KEY] ?: "",
                 preferences[TOKEN_KEY] ?: "",
                 preferences[IS_LOGIN_KEY] ?: false,
+                preferences[DISPLAY_NAME_KEY] ?: "" // Retrieve the displayName
             )
+            Log.d("UserRepository", "Session retrieved: ${userModel.localId}")
+            userModel
         }
     }
 
@@ -42,8 +48,9 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         private var INSTANCE: UserPreference? = null
 
         private val EMAIL_KEY = stringPreferencesKey("email")
-        private val TOKEN_KEY = stringPreferencesKey("token")
+        private val TOKEN_KEY = stringPreferencesKey("localId")
         private val IS_LOGIN_KEY = booleanPreferencesKey("isLogin")
+        private val DISPLAY_NAME_KEY = stringPreferencesKey("displayName") // Add this key
 
         fun getInstance(dataStore: DataStore<Preferences>): UserPreference {
             return INSTANCE ?: synchronized(this) {

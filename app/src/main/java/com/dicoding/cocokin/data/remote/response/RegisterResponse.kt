@@ -3,12 +3,14 @@ package com.dicoding.cocokin.data.remote.response
 import com.google.gson.annotations.SerializedName
 
 data class RegisterResponse(
-
 	@field:SerializedName("expiresIn")
 	val expiresIn: String,
 
 	@field:SerializedName("kind")
 	val kind: String,
+
+	@field:SerializedName("displayName")
+	val displayName: String,
 
 	@field:SerializedName("idToken")
 	val idToken: String,
